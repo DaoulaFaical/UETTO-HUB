@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "titre": "Guide Complet Python",
+    "description": "Tutoriel complet de programmation en Python pour débutants",
+    "categorie": "Programmation",
+    "type": "pdf",
+    "fichier": "assets/documents/python-guide.pdf",
+    "lien": ""
+  },
+  {
+    "id": 2,
+    "titre": "Calcul Différentiel",
+    "description": "Cours de mathématiques sur le calcul différentiel et intégral",
+    "categorie": "Mathématiques",
+    "type": "pdf",
+    "fichier": "assets/documents/calcul-differentiel.pdf",
+    "lien": ""
+  },
+  {
+    "id": 3,
+    "titre": "Introduction à la Biologie Moléculaire",
+    "description": "Vidéo introductive sur la biologie moléculaire",
+    "categorie": "Biologie",
+    "type": "video",
+    "fichier": "",
+    "lien": "https://www.youtube.com/embed/example"
+  }
+]

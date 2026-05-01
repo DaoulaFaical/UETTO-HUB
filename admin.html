@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - UETTO-HUB</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">UETTO-HUB</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Tableau de Bord</a></li>
+                <li><a href="admin.html" class="active">Admin</a></li>
+                <li><button onclick="logout()" class="btn-logout">Déconnexion</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 40px 20px;">
+        <h1>🔐 Panneau d'Administration</h1>
+        <p class="subtitle">Gérez les étudiants et les ressources</p>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('students')">👥 Étudiants</button>
+            <button class="tab-btn" onclick="switchTab('resources')">📂 Ressources</button>
+            <button class="tab-btn" onclick="switchTab('projects')">🏆 Projets</button>
+        </div>
+
+        <!-- Tab Étudiants -->
+        <div id="studentsTab" class="tab-content active">
+            <h2>Gestion des Étudiants</h2>
+            <div id="adminLoginPrompt" style="display:none; background: var(--bg-light); padding: 2rem; border-radius: 10px;">
+                <p style="margin-bottom: 1rem;">Veuillez entrer le mot de passe admin pour accéder à cette section.</p>
+                <input type="password" id="adminPassword" placeholder="Mot de passe admin" class="form-input" style="max-width: 300px; margin-bottom: 1rem;">
+                <button onclick="verifyAdmin()" class="btn btn-primary">Vérifier</button>
+            </div>
+            <div id="studentsAdmin" style="display:none;">
+                <div class="admin-form">
+                    <h3>Ajouter un Nouvel Étudiant</h3>
+                    <form id="addStudentForm">
+                        <div class="form-group">
+                            <label for="studentNom">Nom Complet *</label>
+                            <input type="text" id="studentNom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentUniversite">Université *</label>
+                            <input type="text" id="studentUniversite" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentFiliere">Filière *</label>
+                            <input type="text" id="studentFiliere" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentAnnee">Année d'Étude *</label>
+                            <input type="text" id="studentAnnee" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentEmail">Email</label>
+                            <input type="email" id="studentEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentTelephone">Téléphone</label>
+                            <input type="tel" id="studentTelephone">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentPhoto">Photo (URL)</label>
+                            <input type="text" id="studentPhoto" placeholder="assets/images/photo.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="studentShowPrivate">
+                                Afficher les infos privées (email, tél)
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter l'Étudiant</button>
+                    </form>
+                    <div id="addStudentMessage" class="form-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Ressources -->
+        <div id="resourcesTab" class="tab-content" style="display:none;">
+            <h2>Gestion des Ressources</h2>
+            <div id="resourcesAdmin" style="display:none;">
+                <div class="admin-form">
+                    <h3>Ajouter une Nouvelle Ressource</h3>
+                    <form id="addResourceForm">
+                        <div class="form-group">
+                            <label for="resourceTitre">Titre *</label>
+                            <input type="text" id="resourceTitre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resourceDescription">Description</label>
+                            <textarea id="resourceDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="resourceCategorie">Catégorie *</label>
+                            <input type="text" id="resourceCategorie" placeholder="ex: Mathématiques, Programmation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resourceType">Type *</label>
+                            <select id="resourceType" required>
+                                <option value="">-- Sélectionner --</option>
+                                <option value="pdf">PDF</option>
+                                <option value="video">Vidéo</option>
+                                <option value="lien">Lien</option>
+                                <option value="document">Document</option>
+                                <option value="image">Image</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resourceFichier">Lien du Fichier (URL)</label>
+                            <input type="text" id="resourceFichier" placeholder="assets/documents/file.pdf">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter la Ressource</button>
+                    </form>
+                    <div id="addResourceMessage" class="form-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Projets -->
+        <div id="projectsTab" class="tab-content" style="display:none;">
+            <h2>Gestion des Projets</h2>
+            <div id="projectsAdmin" style="display:none;">
+                <div class="admin-form">
+                    <h3>Ajouter un Nouveau Projet</h3>
+                    <form id="addProjectForm">
+                        <div class="form-group">
+                            <label for="projectTitre">Titre du Projet *</label>
+                            <input type="text" id="projectTitre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDescription">Description</label>
+                            <textarea id="projectDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectCategorie">Catégorie</label>
+                            <input type="text" id="projectCategorie" placeholder="ex: Social, Technologie">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDate">Date</label>
+                            <input type="text" id="projectDate" placeholder="ex: Mai 2026">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectImage">Image (URL)</label>
+                            <input type="text" id="projectImage" placeholder="assets/images/project.jpg">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter le Projet</button>
+                    </form>
+                    <div id="addProjectMessage" class="form-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 UETTO-HUB. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        if (!localStorage.getItem('uetto_authenticated')) {
+            window.location.href = 'login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAccess();
+        });
+
+        function checkAdminAccess() {
+            if (localStorage.getItem('uetto_admin') !== 'true') {
+                document.getElementById('adminLoginPrompt').style.display = 'block';
+                document.getElementById('studentsAdmin').style.display = 'none';
+                document.getElementById('resourcesAdmin').style.display = 'none';
+                document.getElementById('projectsAdmin').style.display = 'none';
+            } else {
+                unlockAdmin();
+            }
+        }
+
+        function verifyAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === 'admin123') {
+                localStorage.setItem('uetto_admin', 'true');
+                unlockAdmin();
+            } else {
+                alert('❌ Mot de passe admin incorrect');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        function unlockAdmin() {
+            document.getElementById('adminLoginPrompt').style.display = 'none';
+            document.getElementById('studentsAdmin').style.display = 'block';
+            document.getElementById('resourcesAdmin').style.display = 'block';
+            document.getElementById('projectsAdmin').style.display = 'block';
+            
+            setupForms();
+        }
+
+        function setupForms() {
+            document.getElementById('addStudentForm').addEventListener('submit', addStudent);
+            document.getElementById('addResourceForm').addEventListener('submit', addResource);
+            document.getElementById('addProjectForm').addEventListener('submit', addProject);
+        }
+
+        function addStudent(e) {
+            e.preventDefault();
+            const student = {
+                id: Date.now(),
+                nom: document.getElementById('studentNom').value,
+                universite: document.getElementById('studentUniversite').value,
+                filiere: document.getElementById('studentFiliere').value,
+                annee: document.getElementById('studentAnnee').value,
+                email: document.getElementById('studentEmail').value || '',
+                telephone: document.getElementById('studentTelephone').value || '',
+                photo: document.getElementById('studentPhoto').value || '',
+                showPrivate: document.getElementById('studentShowPrivate').checked
+            };
+
+            let students = JSON.parse(localStorage.getItem('uetto_students') || '[]');
+            students.push(student);
+            localStorage.setItem('uetto_students', JSON.stringify(students));
+
+            document.getElementById('addStudentMessage').textContent = '✅ Étudiant ajouté avec succès!';
+            document.getElementById('addStudentMessage').className = 'form-message success';
+            document.getElementById('addStudentForm').reset();
+            setTimeout(() => document.getElementById('addStudentMessage').textContent = '', 3000);
+        }
+
+        function addResource(e) {
+            e.preventDefault();
+            const resource = {
+                id: Date.now(),
+                titre: document.getElementById('resourceTitre').value,
+                description: document.getElementById('resourceDescription').value,
+                categorie: document.getElementById('resourceCategorie').value,
+                type: document.getElementById('resourceType').value,
+                fichier: document.getElementById('resourceFichier').value || ''
+            };
+
+            let resources = JSON.parse(localStorage.getItem('uetto_resources') || '[]');
+            resources.push(resource);
+            localStorage.setItem('uetto_resources', JSON.stringify(resources));
+
+            document.getElementById('addResourceMessage').textContent = '✅ Ressource ajoutée avec succès!';
+            document.getElementById('addResourceMessage').className = 'form-message success';
+            document.getElementById('addResourceForm').reset();
+            setTimeout(() => document.getElementById('addResourceMessage').textContent = '', 3000);
+        }
+
+        function addProject(e) {
+            e.preventDefault();
+            const project = {
+                id: Date.now(),
+                titre: document.getElementById('projectTitre').value,
+                description: document.getElementById('projectDescription').value,
+                categorie: document.getElementById('projectCategorie').value,
+                date: document.getElementById('projectDate').value,
+                image: document.getElementById('projectImage').value || ''
+            };
+
+            let projects = JSON.parse(localStorage.getItem('uetto_projects') || '[]');
+            projects.push(project);
+            localStorage.setItem('uetto_projects', JSON.stringify(projects));
+
+            document.getElementById('addProjectMessage').textContent = '✅ Projet ajouté avec succès!';
+            document.getElementById('addProjectMessage').className = 'form-message success';
+            document.getElementById('addProjectForm').reset();
+            setTimeout(() => document.getElementById('addProjectMessage').textContent = '', 3000);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tab + 'Tab').style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+                localStorage.removeItem('uetto_authenticated');
+                localStorage.removeItem('uetto_admin');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

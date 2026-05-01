@@ -1,0 +1,14 @@
+{
+  "siteName": "UETTO-HUB",
+  "siteDescription": "Plateforme de la communauté tchadienne étudiante à Tokat",
+  "passwords": {
+    "access": "uetto2026",
+    "admin": "admin123"
+  },
+  "version": "1.0.0",
+  "launchDate": "2026-05-01",
+  "contact": {
+    "email": "contact@uettohub.com",
+    "location": "Tokat, Turquie"
+  }
+}

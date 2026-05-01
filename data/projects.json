@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "titre": "Projet d'Entraide Étudiante",
+    "description": "Création d'une plateforme d'entraide pour les étudiants tchadiens à Tokat",
+    "categorie": "Social",
+    "date": "Avril 2026",
+    "image": "assets/images/project1.jpg"
+  },
+  {
+    "id": 2,
+    "titre": "Semaine Culturelle Tchadienne",
+    "description": "Événement de célébration de la culture tchadienne avec repas traditionnel et dances",
+    "categorie": "Culturel",
+    "date": "Mars 2026",
+    "image": "assets/images/project2.jpg"
+  }
+]
