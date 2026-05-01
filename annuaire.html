@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annuaire - UETTO-HUB</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">UETTO-HUB</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="dashboard.html">Tableau de Bord</a></li>
+                <li><a href="annuaire.html" class="active">Annuaire</a></li>
+                <li><a href="ressources.html">Ressources</a></li>
+                <li><button onclick="logout()" class="btn-logout">Déconnexion</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 40px 20px;">
+        <h1>Annuaire des Étudiants</h1>
+        <p class="subtitle">Base de données des étudiants tchadiens à Tokat</p>
+
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Rechercher par nom..." class="search-input">
+            <select id="filterUniversite" class="filter-select">
+                <option value="">Toutes les universités</option>
+            </select>
+            <select id="filterFiliere" class="filter-select">
+                <option value="">Toutes les filières</option>
+            </select>
+            <select id="filterAnnee" class="filter-select">
+                <option value="">Tous les niveaux</option>
+            </select>
+        </div>
+
+        <div id="studentsContainer" class="students-grid">
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 UETTO-HUB. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        if (!localStorage.getItem('uetto_authenticated')) {
+            window.location.href = 'login.html';
+        }
+
+        let allStudents = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+        });
+
+        function loadStudents() {
+            fetch('data/students.json')
+                .then(response => response.json())
+                .then(students => {
+                    allStudents = students;
+                    displayStudents(students);
+                    populateFilters(students);
+                })
+                .catch(err => {
+                    console.error('Erreur:', err);
+                    document.getElementById('studentsContainer').innerHTML = '<p>Erreur chargement des données</p>';
+                });
+        }
+
+        function displayStudents(students) {
+            const container = document.getElementById('studentsContainer');
+            if (students.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Aucun étudiant trouvé.</p>';
+                return;
+            }
+            container.innerHTML = students.map(student => `
+                <div class="student-card">
+                    ${student.photo ? `<img src="${student.photo}" alt="${student.nom}" class="student-photo">` : `<div class="student-photo-placeholder">📷</div>`}
+                    <h3>${student.nom}</h3>
+                    <p><strong>Université:</strong> ${student.universite}</p>
+                    <p><strong>Filière:</strong> ${student.filiere}</p>
+                    <p><strong>Niveau:</strong> ${student.annee}</p>
+                    ${student.showPrivate ? `
+                        <div class="private-info">
+                            <p><strong>📧 Email:</strong> ${student.email || 'N/A'}</p>
+                            <p><strong>📱 Téléphone:</strong> ${student.telephone || 'N/A'}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function populateFilters(students) {
+            const universites = [...new Set(students.map(s => s.universite))];
+            const filieres = [...new Set(students.map(s => s.filiere))];
+            const annees = [...new Set(students.map(s => s.annee))];
+
+            document.getElementById('filterUniversite').innerHTML = `
+                <option value="">Toutes les universités</option>
+                ${universites.map(u => `<option value="${u}">${u}</option>`).join('')}
+            `;
+            document.getElementById('filterFiliere').innerHTML = `
+                <option value="">Toutes les filières</option>
+                ${filieres.map(f => `<option value="${f}">${f}</option>`).join('')}
+            `;
+            document.getElementById('filterAnnee').innerHTML = `
+                <option value="">Tous les niveaux</option>
+                ${annees.map(a => `<option value="${a}">${a}</option>`).join('')}
+            `;
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterStudents);
+        document.getElementById('filterUniversite').addEventListener('change', filterStudents);
+        document.getElementById('filterFiliere').addEventListener('change', filterStudents);
+        document.getElementById('filterAnnee').addEventListener('change', filterStudents);
+
+        function filterStudents() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const universite = document.getElementById('filterUniversite').value;
+            const filiere = document.getElementById('filterFiliere').value;
+            const annee = document.getElementById('filterAnnee').value;
+
+            const filtered = allStudents.filter(student => {
+                return (
+                    student.nom.toLowerCase().includes(search) &&
+                    (!universite || student.universite === universite) &&
+                    (!filiere || student.filiere === filiere) &&
+                    (!annee || student.annee === annee)
+                );
+            });
+
+            displayStudents(filtered);
+        }
+
+        function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+                localStorage.removeItem('uetto_authenticated');
+                localStorage.removeItem('uetto_admin');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

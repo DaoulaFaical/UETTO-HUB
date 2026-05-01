@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ressources - UETTO-HUB</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">UETTO-HUB</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="dashboard.html">Tableau de Bord</a></li>
+                <li><a href="annuaire.html">Annuaire</a></li>
+                <li><a href="ressources.html" class="active">Ressources</a></li>
+                <li><button onclick="logout()" class="btn-logout">Déconnexion</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 40px 20px;">
+        <h1>Ressources & Cours</h1>
+        <p class="subtitle">Accédez aux documents, cours et matériels partagés par la communauté</p>
+
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Rechercher une ressource..." class="search-input">
+            <select id="filterCategorie" class="filter-select">
+                <option value="">Toutes les catégories</option>
+            </select>
+        </div>
+
+        <div id="resourcesContainer" class="resources-grid">
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 UETTO-HUB. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        if (!localStorage.getItem('uetto_authenticated')) {
+            window.location.href = 'login.html';
+        }
+
+        let allResources = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadResources();
+        });
+
+        function loadResources() {
+            fetch('data/resources.json')
+                .then(response => response.json())
+                .then(resources => {
+                    allResources = resources;
+                    displayResources(resources);
+                    populateFilters(resources);
+                })
+                .catch(err => {
+                    console.error('Erreur:', err);
+                    document.getElementById('resourcesContainer').innerHTML = '<p>Erreur chargement des ressources</p>';
+                });
+        }
+
+        function displayResources(resources) {
+            const container = document.getElementById('resourcesContainer');
+            if (resources.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Aucune ressource disponible pour le moment.</p>';
+                return;
+            }
+            container.innerHTML = resources.map(resource => `
+                <div class="resource-card">
+                    <div class="resource-icon">${getIcon(resource.type)}</div>
+                    <h3>${resource.titre}</h3>
+                    <p>${resource.description}</p>
+                    <span class="badge">${resource.categorie}</span>
+                    ${resource.fichier ? `<a href="${resource.fichier}" class="btn btn-small" download>Télécharger</a>` : ''}
+                    ${resource.lien ? `<a href="${resource.lien}" class="btn btn-small" target="_blank">Accéder</a>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function getIcon(type) {
+            const icons = {
+                'pdf': '📄',
+                'video': '🎥',
+                'lien': '🔗',
+                'image': '🖼️',
+                'document': '📝'
+            };
+            return icons[type] || '📂';
+        }
+
+        function populateFilters(resources) {
+            const categories = [...new Set(resources.map(r => r.categorie))];
+            document.getElementById('filterCategorie').innerHTML = `
+                <option value="">Toutes les catégories</option>
+                ${categories.map(c => `<option value="${c}">${c}</option>`).join('')}
+            `;
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterResources);
+        document.getElementById('filterCategorie').addEventListener('change', filterResources);
+
+        function filterResources() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const categorie = document.getElementById('filterCategorie').value;
+
+            const filtered = allResources.filter(resource => {
+                return (
+                    (resource.titre.toLowerCase().includes(search) || resource.description.toLowerCase().includes(search)) &&
+                    (!categorie || resource.categorie === categorie)
+                );
+            });
+
+            displayResources(filtered);
+        }
+
+        function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+                localStorage.removeItem('uetto_authenticated');
+                localStorage.removeItem('uetto_admin');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - UETTO-HUB</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">UETTO-HUB</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="guide.html">Guide</a></li>
+                <li><a href="projets.html">Projets</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="login.html" class="btn-login">Accès Privé</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 40px 20px;">
+        <h1>Nous Contacter</h1>
+        <p class="subtitle">Des questions? Proposez un projet? Rejoignez-nous!</p>
+
+        <div class="contact-section">
+            <div class="contact-form">
+                <h2>Formulaire de Contact</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="nom">Nom complet *</label>
+                        <input type="text" id="nom" name="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objet">Objet *</label>
+                        <select id="objet" name="objet" required>
+                            <option value="">-- Sélectionner --</option>
+                            <option value="inscription">Inscription - Nouvel Étudiant</option>
+                            <option value="projet">Proposer un Projet</option>
+                            <option value="ressource">Partager une Ressource</option>
+                            <option value="question">Question Générale</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </form>
+                <div id="formMessage" class="form-message"></div>
+            </div>
+
+            <div class="contact-info">
+                <h2>Informations</h2>
+                <div class="info-item">
+                    <h3>📧 Email</h3>
+                    <p><a href="mailto:contact@uettohub.com">contact@uettohub.com</a></p>
+                </div>
+                <div class="info-item">
+                    <h3>📍 Localisation</h3>
+                    <p>Tokat, Turquie</p>
+                </div>
+                <div class="info-item">
+                    <h3>🤝 Réseaux Sociaux</h3>
+                    <p>
+                        <a href="#" class="social-link">Facebook</a> | 
+                        <a href="#" class="social-link">WhatsApp</a> | 
+                        <a href="#" class="social-link">Instagram</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 UETTO-HUB. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formMessage = document.getElementById('formMessage');
+            formMessage.textContent = '✅ Merci! Votre message a été reçu. Nous vous répondrons bientôt.';
+            formMessage.className = 'form-message success';
+            this.reset();
+            setTimeout(() => formMessage.textContent = '', 5000);
+        });
+    </script>
+</body>
+</html>

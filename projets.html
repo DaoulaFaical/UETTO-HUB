@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projets - UETTO-HUB</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">UETTO-HUB</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="guide.html">Guide</a></li>
+                <li><a href="projets.html" class="active">Projets</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html" class="btn-login">Accès Privé</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 40px 20px;">
+        <h1>Nos Projets & Activités</h1>
+        <p class="subtitle">Découvrez les réalisations de notre communauté</p>
+
+        <div id="projects-container" class="projects-grid">
+        </div>
+
+        <div style="text-align: center; margin-top: 50px;">
+            <h2>Vous avez un projet à partager?</h2>
+            <p>Contactez-nous pour ajouter vos réalisations!</p>
+            <a href="contact.html" class="btn btn-primary">Proposer un Projet</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 UETTO-HUB. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjects();
+        });
+
+        function loadProjects() {
+            fetch('data/projects.json')
+                .then(response => response.json())
+                .then(projects => {
+                    const container = document.getElementById('projects-container');
+                    if (projects.length === 0) {
+                        container.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">Aucun projet pour le moment. Revenez bientôt!</p>';
+                        return;
+                    }
+                    container.innerHTML = projects.map(project => `
+                        <div class="project-card">
+                            ${project.image ? `<div class="project-image" style="background: url('${project.image}') center/cover;"></div>` : ''}
+                            <div class="project-content">
+                                <h3>${project.titre}</h3>
+                                <p>${project.description}</p>
+                                ${project.date ? `<p class="project-date">📅 ${project.date}</p>` : ''}
+                                ${project.categorie ? `<span class="badge">${project.categorie}</span>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(err => {
+                    console.error('Erreur chargement projets:', err);
+                    document.getElementById('projects-container').innerHTML = '<p>Erreur chargement des projets</p>';
+                });
+        }
+    </script>
+</body>
+</html>

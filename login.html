@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - UETTO-HUB</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">UETTO-HUB</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <h1>Espace Privé</h1>
+            <p>Accédez à l'Annuaire et aux Ressources</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="Entrez le mot de passe" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Connexion</button>
+            </form>
+
+            <div id="loginMessage" class="form-message"></div>
+
+            <div class="auth-footer">
+                <p><a href="index.html">← Retour à l'accueil</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('loginMessage');
+
+            if (password === 'uetto2026') {
+                localStorage.setItem('uetto_authenticated', 'true');
+                localStorage.setItem('uetto_login_time', new Date().getTime());
+                messageDiv.textContent = '✅ Connexion réussie! Redirection...';
+                messageDiv.className = 'form-message success';
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+            } else {
+                messageDiv.textContent = '❌ Mot de passe incorrect';
+                messageDiv.className = 'form-message error';
+                document.getElementById('password').value = '';
+            }
+        });
+    </script>
+</body>
+</html>

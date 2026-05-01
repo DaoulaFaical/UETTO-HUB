@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - UETTO-HUB</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">UETTO-HUB</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="dashboard.html" class="active">Tableau de Bord</a></li>
+                <li><a href="annuaire.html">Annuaire</a></li>
+                <li><a href="ressources.html">Ressources</a></li>
+                <li><button onclick="logout()" class="btn-logout">Déconnexion</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 40px 20px;">
+        <h1>Tableau de Bord</h1>
+        <p class="subtitle">Bienvenue dans votre espace privé</p>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <h3>👥 Annuaire</h3>
+                <p>Consultez et connectez-vous avec tous les étudiants tchadiens.</p>
+                <a href="annuaire.html" class="btn btn-primary">Accéder</a>
+            </div>
+            <div class="dashboard-card">
+                <h3>📂 Ressources</h3>
+                <p>Accédez aux cours, documents et matériels pédagogiques.</p>
+                <a href="ressources.html" class="btn btn-primary">Accéder</a>
+            </div>
+            <div class="dashboard-card">
+                <h3>🔐 Gestion Admin</h3>
+                <p>Administrez les étudiants et les ressources (Admin uniquement).</p>
+                <a href="admin.html" class="btn btn-primary" id="adminLink" style="display: none;">Accéder</a>
+                <p id="notAdmin" style="color: #999; font-size: 14px;">Accès réservé aux administrateurs</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h2>ℹ️ Information</h2>
+            <p>Vous êtes connecté à l'espace privé d'UETTO-HUB. Voici ce que vous pouvez faire:</p>
+            <ul>
+                <li>📞 Trouver les coordonnées d'autres étudiants</li>
+                <li>📚 Télécharger des ressources pédagogiques</li>
+                <li>🤝 Vous connecter avec la communauté</li>
+                <li>📝 Partager vos documents (contactez l'admin)</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 UETTO-HUB. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        if (!localStorage.getItem('uetto_authenticated')) {
+            window.location.href = 'login.html';
+        }
+
+        function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+                localStorage.removeItem('uetto_authenticated');
+                localStorage.removeItem('uetto_admin');
+                window.location.href = 'index.html';
+            }
+        }
+
+        if (localStorage.getItem('uetto_admin') === 'true') {
+            document.getElementById('adminLink').style.display = 'inline-block';
+            document.getElementById('notAdmin').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
